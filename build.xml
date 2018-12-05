@@ -117,7 +117,7 @@
    ant findbugs -Dfindbugs.homedir=/etc/findbugs -Dfindbugs.level=medium
   [The defaults are /findbugs and medium]
    -->
-	<property name="findbugs.homedir" value="/findbugs" />
+	<property name="findbugs.homedir" value="/home/nancy/java/findbugs" />
 	<property name="findbugs.level" value="medium" />
 	<property name="findbugs.xsldir" value="${findbugs.homedir}/src/xsl" />
 	<property name="findbugs.xslname" value="fancy" />
@@ -150,6 +150,7 @@
               outputFile="${findbugs.outName}.xml" >
 			<sourcePath path="${src.core}" />
 			<sourcePath path="${src.http}" />
+			<sourcePath path="${src.mqtt}" />
 			<sourcePath path="${src.ftp}" />
 			<sourcePath path="${src.java}" />
 			<sourcePath path="${src.junit}" />
@@ -198,7 +199,6 @@
 					<include name="*.jar"/>
 				</fileset>
 			</auxClasspath>
-
 		</findbugs>
 		<antcall target="findbugs-style"/>
 		<antcall target="findbugs-xsl"/>
@@ -226,6 +226,7 @@
 	<property name="src.dir" value="src"/>
 	<property name="src.core" value="src/core"/>
 	<property name="src.http" value="src/protocol/http"/>
+	<property name="src.mqtt" value="src/protocol/mqtt"/>
 	<property name="src.ftp" value="src/protocol/ftp"/>
 	<property name="src.test" value="test/src"/>
 	<property name="src.jdbc" value="src/protocol/jdbc"/>
@@ -272,6 +273,7 @@
 	<property name="build.dir" value="build"/>
 	<property name="build.core" value="build/core"/>
 	<property name="build.http" value="build/protocol/http"/>
+	<property name="build.mqtt" value="build/protocol/mqtt"/>
 	<property name="build.ftp" value="build/protocol/ftp"/>
 	<property name="build.jdbc" value="build/protocol/jdbc"/>
 	<property name="build.java" value="build/protocol/java"/>
@@ -702,6 +704,31 @@
 		</javac>
 	</target>
 
+	<target name="compile-mqtt" depends="compile-jorphan,compile-core,compile-components" 
+		description="Compile components specific to MQTT sampling.">
+		<mkdir dir="${build.mqtt}"/>
+		<!-- Directory needs to exist, or jar will fail -->
+		<javac srcdir="${src.mqtt}" destdir="${build.mqtt}" source="${src.java.version}" optimize="${optimize}" 
+				debug="on" target="${target.java.version}"
+	           includeAntRuntime="${includeAntRuntime}" deprecation="${deprecation}" encoding="${encoding}">
+			<include name="**/*.java"/>
+			<classpath>
+				<pathelement location="${build.jorphan}"/>
+				<pathelement location="${build.core}"/>
+				<pathelement location="${build.components}"/>
+				<path refid="classpath"/>
+				<pathelement location="${lib.dir}/${jcl-over-slf4j.jar}"/>
+				<pathelement location="${lib.dir}/${log4j-api.jar}"/>
+				<pathelement location="${lib.dir}/${log4j-core.jar}"/>
+				<pathelement location="${lib.dir}/${mqtt-client.jar}"/>
+				<pathelement location="${lib.dir}/${hawtbuf.jar}"/>
+				<pathelement location="${lib.dir}/${hawtdispatch.jar}"/>
+				<pathelement location="${lib.dir}/${hawtdispatch-transport}"/>
+			</classpath>
+		</javac>
+	</target>
+
+
 	<target name="compile-http" depends="compile-jorphan,compile-core,compile-components" description="Compile components specific to HTTP sampling.">
 		<mkdir dir="${build.http}"/>
 		<!-- Directory needs to exist, or jar will fail -->
@@ -873,7 +900,9 @@
 		</javac>
 	</target>
 
-	<target name="compile-protocols" depends="compile-http,compile-ftp,compile-jdbc,compile-java,compile-ldap,compile-mail,compile-tcp" description="Compile all protocol-specific components."/>
+	<target name="compile-protocols" 
+		depends="compile-http,compile-mqtt,compile-ftp,compile-jdbc,compile-java,compile-ldap,compile-mail,compile-tcp" 
+		description="Compile all protocol-specific components."/>
 
 	<target name="compile-examples" depends="compile-jorphan,compile-core" description="Compile example components.">
 		<mkdir dir="${build.examples}"/>
@@ -942,7 +971,7 @@
 	</target>
 
 	<target name="compile"
-  depends="_message_3rdParty,compile-core,compile-components,compile-functions,compile-protocols,compile-junit,compile-jms,compile-native, compile-mongodb"
+  		depends="_message_3rdParty,compile-core,compile-components,compile-functions,compile-protocols,compile-junit,compile-jms,compile-native, compile-mongodb"
   description="Compile everything."/>
 
 	<target name="run_gui" depends="package" description="Run the JMeter GUI off the jar files">
@@ -1095,7 +1124,18 @@ run JMeter unless all the JMeter jars are added.
 			<fileset dir="${build.http}" includes="**/*.class"/>
 			<fileset dir="${src.http}" includes="**/*.properties" />
 		</jar>
-
+		
+		<!-- mqtt -->
+		<jar jarfile="${dest.jar}/ApacheJMeter_mqtt.jar" manifest="${build.dir}/MANIFEST_BIN.MF">
+			<zipfileset file="${resources.meta-inf}/default.notice"
+        fullpath="META-INF/NOTICE" />
+			<zipfileset file="${resources.meta-inf}/default.license"
+        fullpath="META-INF/LICENSE" />
+			<fileset dir="${build.mqtt}" includes="**/*.class"/>
+			<fileset dir="${src.mqtt}" includes="**/*.properties" />
+		</jar>		
+		
+		
 		<!-- ftp -->
 		<jar jarfile="${dest.jar}/ApacheJMeter_ftp.jar" manifest="${build.dir}/MANIFEST_BIN.MF">
 			<zipfileset file="${resources.meta-inf}/default.notice"
@@ -2846,7 +2886,6 @@ run JMeter unless all the JMeter jars are added.
 			<param name="batchtest.name" value="BUG_62847"/>
 			<param name="batchtest.jmx" value="BUG_62847.jmx"/>
 		</antcall>
-
 		<antcall target="batchtest">
 			<param name="batchtest.name" value="TestResultStatusAction"/>
 			<param name="batchtest.jmx" value="TestResultStatusAction.jmx"/>
@@ -3364,7 +3403,6 @@ run JMeter unless all the JMeter jars are added.
         actual   ${SHA512}</fail>
 		<echo level="info" message="Checksum OK: ${file}"/>
 	</target>
-
 	<!--
     Generic target to process all external jars.
     The "process_jarfile" macro resolves the properties that begin with the jarname
@@ -3454,6 +3492,10 @@ run JMeter unless all the JMeter jars are added.
 		<process_jarfile jarname="ftpserver-core" dest.dir="${lib.coverage}" />
 		<process_jarfile jarname="jacocoant" dest.dir="${lib.coverage}" />
 		<process_jarfile jarname="sonarqube-ant-task" dest.dir="${lib.coverage}" />
+		<process_jarfile jarname="mqtt-client" />
+		<process_jarfile jarname="hawtbuf"/>
+		<process_jarfile jarname="hawtdispatch" />
+		<process_jarfile jarname="hawtdispatch-transport"/>
 	</target>
 
 	<target name="_process_doc_jars">
