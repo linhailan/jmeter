@@ -117,7 +117,7 @@
    ant findbugs -Dfindbugs.homedir=/etc/findbugs -Dfindbugs.level=medium
   [The defaults are /findbugs and medium]
    -->
-	<property name="findbugs.homedir" value="/home/nancy/java/findbugs" />
+	<property name="findbugs.homedir" value="/home/dsd/java/findbugs-3.0.1" />
 	<property name="findbugs.level" value="medium" />
 	<property name="findbugs.xsldir" value="${findbugs.homedir}/src/xsl" />
 	<property name="findbugs.xslname" value="fancy" />
