@@ -71,14 +71,25 @@ public class Property2 extends AbstractFunction {
     @Override
     public String execute(SampleResult previousResult, Sampler currentSampler)
             throws InvalidVariableException {
+    	
+    	System.out.println(values[0]);
+    	
         String propertyName = ((CompoundVariable) values[0]).execute();
+        
+        System.out.println("propertyName");
 
         String propertyDefault = "1"; //$NON-NLS-1$
         if (values.length > 1) { // We have a default
             propertyDefault = ((CompoundVariable) values[1]).execute();
+            System.out.println(propertyDefault);
         }
 
         String propertyValue = JMeterUtils.getPropDefault(propertyName, propertyDefault);
+        
+        /**
+         * 这里经常返回不是未解析的本地变量而不是最终结果，加个打印看看
+         */
+        System.out.println("return value:"+propertyValue);
 
         return propertyValue;
 

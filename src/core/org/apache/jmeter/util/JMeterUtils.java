@@ -791,10 +791,12 @@ public class JMeterUtils implements UnitTestManager {
      * @return The PropDefault value applying a trim on it
      */
     public static String getPropDefault(String propName, String defaultVal) {
+    	log.warn("属性名："+propName+",默认值： "+defaultVal);
         String ans = defaultVal;
         try 
         {
             String value = appProperties.getProperty(propName, defaultVal);
+            
             if(value != null) {
                 ans = value.trim();
             }
