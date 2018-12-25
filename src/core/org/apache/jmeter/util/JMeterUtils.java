@@ -791,7 +791,6 @@ public class JMeterUtils implements UnitTestManager {
      * @return The PropDefault value applying a trim on it
      */
     public static String getPropDefault(String propName, String defaultVal) {
-    	log.warn("属性名："+propName+",默认值： "+defaultVal);
         String ans = defaultVal;
         try 
         {
@@ -804,6 +803,7 @@ public class JMeterUtils implements UnitTestManager {
             log.warn("Exception '{}' occurred when fetching String property:'{}', defaulting to: {}", e.getMessage(), propName, defaultVal);
             ans = defaultVal;
         }
+        
         return ans;
     }
     
