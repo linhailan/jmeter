@@ -1,7 +1,5 @@
 package org.apache.jmeter.functions;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +8,6 @@ import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.threads.JMeterVariables;
-import sun.misc.BASE64Encoder;
 
 public class MyBase64ForString extends AbstractFunction {
 	
@@ -21,7 +18,7 @@ public class MyBase64ForString extends AbstractFunction {
 	}
 	
 	static {
-		desc.add("字符串编码后存放的变量");
+		desc.add("字符串base64编码后存放的变量");
 	}
 	
 	private static final String KEY = "__MyBase64ForString";
@@ -64,6 +61,7 @@ public class MyBase64ForString extends AbstractFunction {
 
     public String getStringBase64(String dataToBeEncode) {
     	     byte[] sb = dataToBeEncode.getBytes();
-    	     return new sun.misc.BASE64Encoder().encode(sb);
+    	     String result = new sun.misc.BASE64Encoder().encode(sb);
+    	     return result.replaceAll("\r|\n", "");
     }	
 }
