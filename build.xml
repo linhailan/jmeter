@@ -6,9 +6,7 @@
    The ASF licenses this file to You under the Apache License, Version 2.0
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
-
        http://www.apache.org/licenses/LICENSE-2.0
-
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,22 +64,16 @@
   </description>
 
   <!--
-
   Note
   ====
   As with most other Apache projects, Gump (http://gump.apache.org/) is used to
   perform automated builds and tests on JMeter.
-
   Gump uses its project/jmeter.xml file to determine which target to use.
   The current setting is: <ant target="dist">
-
   Any changes to the dependency list for dist may affect Gump.
-
   Now the dist target depends on "assume-libs-present", so if additional libraries are added to that,
   the Gump project file for JMeter must also be updated.
-
   Jars that are not required by the dist target do not need to be added to the Gump project file.
-
   -->
 
   <!-- Minimal version of Apache Ant required by this Ant script -->
@@ -110,7 +102,6 @@
    <!--
    Findbugs is licensed under the Lesser GNU Public License
    HomePage: http://www.cs.umd.edu/~pugh/java/bugs/
-
    To use the findbugs target, download and install the findbugs binary distribution
    Set the value of findbugs.homedir according to where you installed findbugs, for example:
    ant findbugs -Dfindbugs.homedir=/etc/findbugs -Dfindbugs.level=medium
@@ -296,7 +287,6 @@
   as the relative path to the directory where this build file is found.
   For example:
                eclipse.anakia=workspace/jmeter
-
   An alternative is to define it as a command-line argument on the Main page;
   this allows one to use a macro name, so is more portable.
   For example:
@@ -420,6 +410,9 @@
     <include name="${lib.dir}/${httpcore-nio.jar}"/>
     <include name="${lib.dir}/${httpmime.jar}"/>
     <include name="${lib.dir}/${jakarta-oro.jar}"/>
+    <include name="${lib.dir}/${jackson-annotations.jar}"/>
+    <include name="${lib.dir}/${jackson-core.jar}"/>
+    <include name="${lib.dir}/${jackson-databind.jar}"/>
     <include name="${lib.dir}/${javamail.jar}"/>
     <include name="${lib.dir}/${jcharts.jar}"/>
     <include name="${lib.dir}/${jcl-over-slf4j.jar}"/>
@@ -464,11 +457,9 @@
   Any such jars need to be downloaded separately.
   These can be put into ${lib.dir} or ${lib.opt}
   - both of these are included in the build classpath
-
   Any jars put into ${lib.dir} will be included in
   the classpath used by JMeter to load classes.
   Jars in ${lib.opt} are NOT normally included by JMeter.
-
   Placing an optional jar in ${lib.opt} means that it
   will be included in the build classpath, but it will
   not be included in the runtime classpath. This is intended
@@ -507,6 +498,9 @@
     <pathelement location="${lib.dir}/${httpcore-nio.jar}"/>
     <pathelement location="${lib.dir}/${httpmime.jar}"/>
     <pathelement location="${lib.dir}/${jakarta-oro.jar}"/>
+    <pathelement location="${lib.dir}/${jackson-annotations.jar}"/>
+    <pathelement location="${lib.dir}/${jackson-core.jar}"/>
+    <pathelement location="${lib.dir}/${jackson-databind.jar}"/>
     <pathelement location="${lib.dir}/${javamail.jar}"/>
     <pathelement location="${lib.dir}/${jcharts.jar}"/>
     <pathelement location="${lib.dir}/${jms.jar}"/>
@@ -983,16 +977,12 @@ N.B. Eclipse (and perhaps other Java IDEs) copies all files to the build directo
 told otherwise. This means that there might be copies of property and image files in the
 build directory. To avoid including the files twice in the jar file, we include only .class
 files in the list of files to be processed from the build tree.
-
 Eclipse has been fixed so that it no longer shows files in the build tree in the Open Resource dialogue,
 so having duplicates in the build tree no longer causes confusion.
-
 Note: if built from Eclipse, the build directory will include resources and images,
 and Eclipse will thus be able to run JMeter from the default path.
-
 If built using Ant, the build tree will not contain any resources, and thus Eclipse will not be able to
 run JMeter unless all the JMeter jars are added.
-
 -->
   <target name="package-only" description="Package already-compiled classes (shortcut for IDE users)">
     <manifest file="${build.dir}/MANIFEST_BIN.MF">
@@ -1803,7 +1793,6 @@ run JMeter unless all the JMeter jars are added.
   </macrodef>
   <!--
       Beanshell script to create the svnmucc scripts for upload, delete and publish.
-
       The generated script assumes svnmucc is invoked with a root URL of
       https://dist.apache.org/repos/dist/
       This means that the jmeter files are at:
@@ -1854,7 +1843,6 @@ run JMeter unless all the JMeter jars are added.
       for (i = 0; i < extensions.length; ++i) {
         extension = extensions[i];
         srcFile = basename + extension;
-
         if ("upload".equals(type)) {
             upload(srcFile);
         } else if ("publish".equals(type)) {
@@ -1951,42 +1939,30 @@ run JMeter unless all the JMeter jars are added.
 
   <!--
         Targets for deploying release candidates via svnpubsub.
-
         By default, deploys the artifacts under the JMeter test repo:
         https://svn.apache.org/repos/asf/jmeter/test/
-
         The live repo is:
         https://dist.apache.org/repos/dist/
-
         The JMeter files are to be found under:
-
         dev/jmeter/[source|binaries]
         and
         release/jmeter/[source|binaries]
-
         Files that are expected to be present:
         apache-jmeter-<version>.[tgz|zip] + [.asc|.sha512]
         apache-jmeter-<version>_src.[tgz|zip] + [.asc|.sha512]
-
         Must have SVN installed, in particular the svnmucc command-line client.
-
-
         Pre-requisites:
         The distribution files must have been built and signed and placed in the dist/ directory.
         If any required files are missing, then upload will fail.
-
         Usage:
           ant RC_upload  [-DrepoType=test|live] [-Djmeter.version=2.9] -DRC=RCn [-Dasf.ldap.password=secret [-Dasf.ldap.usermame=user] ]
           ant RC_publish [-DrepoType=test|live] [-Djmeter.version=2.9] -DRC=RCn [-Dasf.ldap.password=secret [-Dasf.ldap.usermame=user] ]
           ant release_delete  [-DrepoType=test|live]  -Djmeter.old.version=2.8      [-Dasf.ldap.password=secret [-Dasf.ldap.usermame=user] ]
           (the old version must be specified and different from the current version!)
-
         If the ldap password is not provided, svnmucc is invoked without the username (-u) and password (-p) parameters.
         In this case, svnmucc will use whatever stored credentials are present for the svn host.
-
         If not using stored credentials, provide at least the ldap password.
         The ldap username defaults to the login name (i.e. the Java user.name property) but can also be provided.
-
         Note: svnmucc can only move or copy files where the target does not exist.
         This is perfect for deploying an RC or new release as these use unique names.
         However, any existing files such as HEADER.html will need to be handled separately.
@@ -2039,24 +2015,17 @@ run JMeter unless all the JMeter jars are added.
   <!--
         Upload jars/poms/sigs to local (/target), snapshots or releases repos; default is local.
         By default, deploys the artifacts to target/deploy under JMeter home.
-
         Must have Maven 2.2.1 or Maven 3.0.x installed.
         The environment variable M2_HOME must point to a suitable Maven installation (2.2.1+)
-
         For remote deployment, username/password will need to be set up in the appropriate
         "server" entries in the Maven settings.xml file, i.e. under:
-
         apache.snapshots.https
         apache.releases.https
-
         Pre-requisite:
         The jars and poms need to be made available. If this has not already been done as part of
         creating the distribution (e.g. a snapshot release is desired), then invoke the following:
-
               ant _dist_maven -Djmeter.version=2.9-SNAPSHOT
-
         For non-SNAPSHOT releases, the jars and poms need to be signed (TODO document how!!)
-
         Usage:
               ant maven_upload [-DrepoType=snapshots|releases]
   -->
@@ -3051,9 +3020,7 @@ run JMeter unless all the JMeter jars are added.
    <!--
    The property java.awt.headless is not automatically passed on,
    because the tests are run in a separate JVM from the build.
-
    It is assumed that Gump sets java.awt.headless if required.
-
    Set test.headless from the java.awt property, if that
    is defined, otherwise it us set to "".
    N.B. if test.headless is already set, it will not be changed
@@ -3384,6 +3351,9 @@ run JMeter unless all the JMeter jars are added.
     <process_jarfile jarname="httpcore-nio"/>
     <process_jarfile jarname="httpmime"/>
     <process_jarfile jarname="jakarta-oro"/>
+    <process_jarfile jarname="jackson-annotations"/>
+    <process_jarfile jarname="jackson-core"/>
+    <process_jarfile jarname="jackson-databind"/>
     <process_jarfile jarname="javamail"/>
     <process_jarfile jarname="jcharts"/>
     <process_jarfile jarname="jdom" dest.dir="${lib.doc}"/>
