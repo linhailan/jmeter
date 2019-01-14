@@ -124,5 +124,6 @@
 	<classpathentry kind="src" path="test/resources" output="build/test"/>
 	<classpathentry kind="src" path="src/protocol/mqtt"/>
 	<classpathentry kind="lib" path="lib/mqtt-client-1.14.jar"/>
+        <classpathentry kind="lib" path="lib/hawtbuf-1.11.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
