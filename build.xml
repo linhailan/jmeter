@@ -6,7 +6,9 @@
    The ASF licenses this file to You under the Apache License, Version 2.0
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
+
        http://www.apache.org/licenses/LICENSE-2.0
+
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,16 +66,22 @@
   </description>
 
 	<!--
+
   Note
   ====
   As with most other Apache projects, Gump (http://gump.apache.org/) is used to
   perform automated builds and tests on JMeter.
+
   Gump uses its project/jmeter.xml file to determine which target to use.
   The current setting is: <ant target="dist">
+
   Any changes to the dependency list for dist may affect Gump.
+
   Now the dist target depends on "assume-libs-present", so if additional libraries are added to that,
   the Gump project file for JMeter must also be updated.
+
   Jars that are not required by the dist target do not need to be added to the Gump project file.
+
   -->
 
 	<!-- Minimal version of Apache Ant required by this Ant script -->
@@ -103,6 +111,7 @@
 	<!--
    Findbugs is licensed under the Lesser GNU Public License
    HomePage: http://www.cs.umd.edu/~pugh/java/bugs/
+
    To use the findbugs target, download and install the findbugs binary distribution
    Set the value of findbugs.homedir according to where you installed findbugs, for example:
    ant findbugs -Dfindbugs.homedir=/etc/findbugs -Dfindbugs.level=medium
@@ -141,6 +150,7 @@
               outputFile="${findbugs.outName}.xml" >
 			<sourcePath path="${src.core}" />
 			<sourcePath path="${src.http}" />
+			<sourcePath path="${src.mqtt}" />
 			<sourcePath path="${src.ftp}" />
 			<sourcePath path="${src.java}" />
 			<sourcePath path="${src.junit}" />
@@ -149,7 +159,6 @@
 			<sourcePath path="${src.mail}" />
 			<sourcePath path="${src.components}" />
 			<sourcePath path="${src.functions}" />
-			<sourcePath path="${src.mqtt}" />
 			<class location="${lib.dir}/jorphan.jar" />
 			<class location="${dest.jar}/ApacheJMeter_components.jar"/>
 			<class location="${dest.jar}/ApacheJMeter_components.jar"/>
@@ -190,7 +199,6 @@
 					<include name="*.jar"/>
 				</fileset>
 			</auxClasspath>
-
 		</findbugs>
 		<antcall target="findbugs-style"/>
 		<antcall target="findbugs-xsl"/>
@@ -218,6 +226,7 @@
 	<property name="src.dir" value="src"/>
 	<property name="src.core" value="src/core"/>
 	<property name="src.http" value="src/protocol/http"/>
+	<property name="src.mqtt" value="src/protocol/mqtt"/>
 	<property name="src.ftp" value="src/protocol/ftp"/>
 	<property name="src.test" value="test/src"/>
 	<property name="src.jdbc" value="src/protocol/jdbc"/>
@@ -233,8 +242,6 @@
 	<property name="src.jms" value="src/protocol/jms"/>
 	<property name="src.native" value="src/protocol/native"/>
 	<property name="src.mongodb" value="src/protocol/mongodb"/>
-	<property name="src.mqtt" value="src/protocol/mqtt"/>
-
 
 	<!-- Where the documentation sources live -->
 	<property name="src.docs" value="xdocs"/>
@@ -266,6 +273,7 @@
 	<property name="build.dir" value="build"/>
 	<property name="build.core" value="build/core"/>
 	<property name="build.http" value="build/protocol/http"/>
+	<property name="build.mqtt" value="build/protocol/mqtt"/>
 	<property name="build.ftp" value="build/protocol/ftp"/>
 	<property name="build.jdbc" value="build/protocol/jdbc"/>
 	<property name="build.java" value="build/protocol/java"/>
@@ -283,7 +291,6 @@
 	<property name="build.test" value="build/test"/>
 	<property name="build.res" value="build/res"/>
 	<property name="build.test-res" value="test/resources"/>
-	<property name="build.mqtt" value="build/protocol/mqtt"/>
 
 	<!-- Path prefix to allow Anakia to find stylesheets if running under Eclipse -->
 	<!--
@@ -292,6 +299,7 @@
   as the relative path to the directory where this build file is found.
   For example:
                eclipse.anakia=workspace/jmeter
+
   An alternative is to define it as a command-line argument on the Main page;
   this allows one to use a macro name, so is more portable.
   For example:
@@ -463,9 +471,11 @@
   Any such jars need to be downloaded separately.
   These can be put into ${lib.dir} or ${lib.opt}
   - both of these are included in the build classpath
+
   Any jars put into ${lib.dir} will be included in
   the classpath used by JMeter to load classes.
   Jars in ${lib.opt} are NOT normally included by JMeter.
+
   Placing an optional jar in ${lib.opt} means that it
   will be included in the build classpath, but it will
   not be included in the runtime classpath. This is intended
@@ -507,6 +517,7 @@
 		<pathelement location="${lib.dir}/${jackson-annotations.jar}"/>
 		<pathelement location="${lib.dir}/${jackson-core.jar}"/>
 		<pathelement location="${lib.dir}/${jackson-databind.jar}"/>
+
 		<pathelement location="${lib.dir}/${javamail.jar}"/>
 		<pathelement location="${lib.dir}/${jcharts.jar}"/>
 		<pathelement location="${lib.dir}/${jms.jar}"/>
@@ -635,31 +646,9 @@
 	<target name="init-docs" depends="report-anakia-missing">
 		<echo level="info">eclipse.anakia = ${eclipse.anakia}</echo>
 	</target>
-
-	<target name="compile-mqtt" depends="compile-jorphan,compile-core,compile-components" 
-		description="Compile components specific to MQTT sampling.">
-		<mkdir dir="${build.mqtt}"/>
-		<!-- Directory needs to exist, or jar will fail -->
-		<javac srcdir="${src.mqtt}" destdir="${build.mqtt}" source="${src.java.version}" optimize="${optimize}" 
-				debug="on" target="${target.java.version}"
-	           includeAntRuntime="${includeAntRuntime}" deprecation="${deprecation}" encoding="${encoding}">
-			<include name="**/*.java"/>
-			<classpath>
-				<pathelement location="${build.jorphan}"/>
-				<pathelement location="${build.core}"/>
-				<pathelement location="${build.components}"/>
-				<path refid="classpath"/>
-				<pathelement location="${lib.dir}/${jcl-over-slf4j.jar}"/>
-				<pathelement location="${lib.dir}/${log4j-api.jar}"/>
-				<pathelement location="${lib.dir}/${log4j-core.jar}"/>
-				<pathelement location="${lib.dir}/${mqtt-client.jar}"/>
-				<pathelement location="${lib.dir}/${hawtbuf.jar}"/>
-				<pathelement location="${lib.dir}/${hawtdispatch.jar}"/>
-				<pathelement location="${lib.dir}/${hawtdispatch-transport}"/>
-			</classpath>
-		</javac>
-	</target>
-
+	
+	
+	
 	<!--
     - Check for anakia task
   -->
@@ -723,6 +712,31 @@
 			</classpath>
 		</javac>
 	</target>
+
+	<target name="compile-mqtt" depends="compile-jorphan,compile-core,compile-components" 
+		description="Compile components specific to MQTT sampling.">
+		<mkdir dir="${build.mqtt}"/>
+		<!-- Directory needs to exist, or jar will fail -->
+		<javac srcdir="${src.mqtt}" destdir="${build.mqtt}" source="${src.java.version}" optimize="${optimize}" 
+				debug="on" target="${target.java.version}"
+	           includeAntRuntime="${includeAntRuntime}" deprecation="${deprecation}" encoding="${encoding}">
+			<include name="**/*.java"/>
+			<classpath>
+				<pathelement location="${build.jorphan}"/>
+				<pathelement location="${build.core}"/>
+				<pathelement location="${build.components}"/>
+				<path refid="classpath"/>
+				<pathelement location="${lib.dir}/${jcl-over-slf4j.jar}"/>
+				<pathelement location="${lib.dir}/${log4j-api.jar}"/>
+				<pathelement location="${lib.dir}/${log4j-core.jar}"/>
+				<pathelement location="${lib.dir}/${mqtt-client.jar}"/>
+				<pathelement location="${lib.dir}/${hawtbuf.jar}"/>
+				<pathelement location="${lib.dir}/${hawtdispatch.jar}"/>
+				<pathelement location="${lib.dir}/${hawtdispatch-transport}"/>
+			</classpath>
+		</javac>
+	</target>
+
 
 	<target name="compile-http" depends="compile-jorphan,compile-core,compile-components" description="Compile components specific to HTTP sampling.">
 		<mkdir dir="${build.http}"/>
@@ -895,7 +909,9 @@
 		</javac>
 	</target>
 
-	<target name="compile-protocols" depends="compile-http,compile-ftp,compile-jdbc,compile-java,compile-ldap,compile-mail,compile-tcp" description="Compile all protocol-specific components."/>
+	<target name="compile-protocols" 
+		depends="compile-http,compile-mqtt,compile-ftp,compile-jdbc,compile-java,compile-ldap,compile-mail,compile-tcp" 
+		description="Compile all protocol-specific components."/>
 
 	<target name="compile-examples" depends="compile-jorphan,compile-core" description="Compile example components.">
 		<mkdir dir="${build.examples}"/>
@@ -964,7 +980,7 @@
 	</target>
 
 	<target name="compile"
-  depends="_message_3rdParty,compile-core,compile-components,compile-functions,compile-protocols,compile-junit,compile-jms,compile-native, compile-mongodb"
+  		depends="_message_3rdParty,compile-core,compile-components,compile-functions,compile-protocols,compile-junit,compile-jms,compile-native, compile-mongodb"
   description="Compile everything."/>
 
 	<target name="run_gui" depends="package" description="Run the JMeter GUI off the jar files">
@@ -1008,12 +1024,16 @@ N.B. Eclipse (and perhaps other Java IDEs) copies all files to the build directo
 told otherwise. This means that there might be copies of property and image files in the
 build directory. To avoid including the files twice in the jar file, we include only .class
 files in the list of files to be processed from the build tree.
+
 Eclipse has been fixed so that it no longer shows files in the build tree in the Open Resource dialogue,
 so having duplicates in the build tree no longer causes confusion.
+
 Note: if built from Eclipse, the build directory will include resources and images,
 and Eclipse will thus be able to run JMeter from the default path.
+
 If built using Ant, the build tree will not contain any resources, and thus Eclipse will not be able to
 run JMeter unless all the JMeter jars are added.
+
 -->
 	<target name="package-only" description="Package already-compiled classes (shortcut for IDE users)">
 		<manifest file="${build.dir}/MANIFEST_BIN.MF">
@@ -1113,7 +1133,18 @@ run JMeter unless all the JMeter jars are added.
 			<fileset dir="${build.http}" includes="**/*.class"/>
 			<fileset dir="${src.http}" includes="**/*.properties" />
 		</jar>
-
+		
+		<!-- mqtt -->
+		<jar jarfile="${dest.jar}/ApacheJMeter_mqtt.jar" manifest="${build.dir}/MANIFEST_BIN.MF">
+			<zipfileset file="${resources.meta-inf}/default.notice"
+        fullpath="META-INF/NOTICE" />
+			<zipfileset file="${resources.meta-inf}/default.license"
+        fullpath="META-INF/LICENSE" />
+			<fileset dir="${build.mqtt}" includes="**/*.class"/>
+			<fileset dir="${src.mqtt}" includes="**/*.properties" />
+		</jar>		
+		
+		
 		<!-- ftp -->
 		<jar jarfile="${dest.jar}/ApacheJMeter_ftp.jar" manifest="${build.dir}/MANIFEST_BIN.MF">
 			<zipfileset file="${resources.meta-inf}/default.notice"
@@ -1825,6 +1856,7 @@ run JMeter unless all the JMeter jars are added.
 	</macrodef>
 	<!--
       Beanshell script to create the svnmucc scripts for upload, delete and publish.
+
       The generated script assumes svnmucc is invoked with a root URL of
       https://dist.apache.org/repos/dist/
       This means that the jmeter files are at:
@@ -1875,6 +1907,7 @@ run JMeter unless all the JMeter jars are added.
       for (i = 0; i < extensions.length; ++i) {
         extension = extensions[i];
         srcFile = basename + extension;
+
         if ("upload".equals(type)) {
             upload(srcFile);
         } else if ("publish".equals(type)) {
@@ -1980,30 +2013,42 @@ run JMeter unless all the JMeter jars are added.
 
 	<!--
         Targets for deploying release candidates via svnpubsub.
+
         By default, deploys the artifacts under the JMeter test repo:
         https://svn.apache.org/repos/asf/jmeter/test/
+
         The live repo is:
         https://dist.apache.org/repos/dist/
+
         The JMeter files are to be found under:
+
         dev/jmeter/[source|binaries]
         and
         release/jmeter/[source|binaries]
+
         Files that are expected to be present:
         apache-jmeter-<version>.[tgz|zip] + [.asc|.sha512]
         apache-jmeter-<version>_src.[tgz|zip] + [.asc|.sha512]
+
         Must have SVN installed, in particular the svnmucc command-line client.
+
+
         Pre-requisites:
         The distribution files must have been built and signed and placed in the dist/ directory.
         If any required files are missing, then upload will fail.
+
         Usage:
           ant RC_upload  [-DrepoType=test|live] [-Djmeter.version=2.9] -DRC=RCn [-Dasf.ldap.password=secret [-Dasf.ldap.usermame=user] ]
           ant RC_publish [-DrepoType=test|live] [-Djmeter.version=2.9] -DRC=RCn [-Dasf.ldap.password=secret [-Dasf.ldap.usermame=user] ]
           ant release_delete  [-DrepoType=test|live]  -Djmeter.old.version=2.8      [-Dasf.ldap.password=secret [-Dasf.ldap.usermame=user] ]
           (the old version must be specified and different from the current version!)
+
         If the ldap password is not provided, svnmucc is invoked without the username (-u) and password (-p) parameters.
         In this case, svnmucc will use whatever stored credentials are present for the svn host.
+
         If not using stored credentials, provide at least the ldap password.
         The ldap username defaults to the login name (i.e. the Java user.name property) but can also be provided.
+
         Note: svnmucc can only move or copy files where the target does not exist.
         This is perfect for deploying an RC or new release as these use unique names.
         However, any existing files such as HEADER.html will need to be handled separately.
@@ -2056,17 +2101,24 @@ run JMeter unless all the JMeter jars are added.
 	<!--
         Upload jars/poms/sigs to local (/target), snapshots or releases repos; default is local.
         By default, deploys the artifacts to target/deploy under JMeter home.
+
         Must have Maven 2.2.1 or Maven 3.0.x installed.
         The environment variable M2_HOME must point to a suitable Maven installation (2.2.1+)
+
         For remote deployment, username/password will need to be set up in the appropriate
         "server" entries in the Maven settings.xml file, i.e. under:
+
         apache.snapshots.https
         apache.releases.https
+
         Pre-requisite:
         The jars and poms need to be made available. If this has not already been done as part of
         creating the distribution (e.g. a snapshot release is desired), then invoke the following:
+
               ant _dist_maven -Djmeter.version=2.9-SNAPSHOT
+
         For non-SNAPSHOT releases, the jars and poms need to be signed (TODO document how!!)
+
         Usage:
               ant maven_upload [-DrepoType=snapshots|releases]
   -->
@@ -2842,9 +2894,10 @@ run JMeter unless all the JMeter jars are added.
 		<antcall target="batchtest">
 			<param name="batchtest.name" value="BUG_62847"/>
 			<param name="batchtest.jmx" value="BUG_62847.jmx"/>
-		</antcall>
+			</antcall>
+			
+			<antcall target="batchtest">
 
-		<antcall target="batchtest">
 			<param name="batchtest.name" value="TestResultStatusAction"/>
 			<param name="batchtest.jmx" value="TestResultStatusAction.jmx"/>
 		</antcall>
@@ -3064,7 +3117,9 @@ run JMeter unless all the JMeter jars are added.
 		<!--
    The property java.awt.headless is not automatically passed on,
    because the tests are run in a separate JVM from the build.
+
    It is assumed that Gump sets java.awt.headless if required.
+
    Set test.headless from the java.awt property, if that
    is defined, otherwise it us set to "".
    N.B. if test.headless is already set, it will not be changed
@@ -3359,7 +3414,6 @@ run JMeter unless all the JMeter jars are added.
         actual   ${SHA512}</fail>
 		<echo level="info" message="Checksum OK: ${file}"/>
 	</target>
-
 	<!--
     Generic target to process all external jars.
     The "process_jarfile" macro resolves the properties that begin with the jarname
@@ -3452,6 +3506,10 @@ run JMeter unless all the JMeter jars are added.
 		<process_jarfile jarname="ftpserver-core" dest.dir="${lib.coverage}" />
 		<process_jarfile jarname="jacocoant" dest.dir="${lib.coverage}" />
 		<process_jarfile jarname="sonarqube-ant-task" dest.dir="${lib.coverage}" />
+		<process_jarfile jarname="mqtt-client" />
+		<process_jarfile jarname="hawtbuf"/>
+		<process_jarfile jarname="hawtdispatch" />
+		<process_jarfile jarname="hawtdispatch-transport"/>
 	</target>
 
 	<target name="_process_doc_jars">
@@ -3843,5 +3901,4 @@ run JMeter unless all the JMeter jars are added.
               proxyuser="${proxy.user}" proxypassword="${proxy.password}" />
 		<echo message="Using ${proxy.host}:${proxy.port} to download file"/>
 	</target>
-
 </project>
