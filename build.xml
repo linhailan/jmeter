@@ -352,6 +352,7 @@
     of JMeter, neither runtime, nor compiletime. These are only required on the
     Ant classpath, so judging from comments elsewhere, this is the wrong place.
   -->
+<<<<<<< HEAD
 	<property name="lib.coverage" location="lib/opt"/>
 
 	<!-- Other stuff -->
@@ -424,6 +425,9 @@
 		<include name="${lib.dir}/${httpcore-nio.jar}"/>
 		<include name="${lib.dir}/${httpmime.jar}"/>
 		<include name="${lib.dir}/${jakarta-oro.jar}"/>
+    	<include name="${lib.dir}/${jackson-annotations.jar}"/>
+    	<include name="${lib.dir}/${jackson-core.jar}"/>
+    	<include name="${lib.dir}/${jackson-databind.jar}"/>
 		<include name="${lib.dir}/${javamail.jar}"/>
 		<include name="${lib.dir}/${jcharts.jar}"/>
 		<include name="${lib.dir}/${jcl-over-slf4j.jar}"/>
@@ -464,6 +468,120 @@
 	</patternset>
 
 	<!--
+=======
+  <property name="lib.coverage" location="lib/opt"/>
+
+  <!-- Other stuff -->
+  <property name="extras.dir" value="extras"/>
+
+  <!-- Some resources to add to jars -->
+  <property name="res.dir" value="res"/>
+
+  <!-- Where the distribution packages will be created -->
+  <property name="dist.dir" value="dist"/>
+
+  <!-- Where the Maven artifacts will be created -->
+  <property name="maven.dir" value="${dist.dir}/maven"/>
+
+  <!-- Where the Maven template poms are located -->
+  <property name="maven.poms" value="res/maven"/>
+
+  <!-- Compilation parameters -->
+  <property name="optimize" value="on"/>
+  <property name="deprecation" value="off"/>
+  <property name="target.java.version" value="1.8"/>
+  <property name="src.java.version" value="1.8"/>
+  <property name="encoding" value="UTF-8"/>
+  <!-- Set test encoding to the same default, but allow override -->
+  <property name="test.encoding" value="${encoding}"/>
+  <!-- Set javadoc encoding to the same default, but allow override -->
+  <property name="javadoc.encoding" value="${encoding}"/>
+  <property name="includeAntRuntime" value="false"/>
+
+  <!-- 3rd party libraries to be included in the binary distribution -->
+  <property file="build.properties"/> <!-- defines the library version numbers -->
+
+  <property name="resources.meta-inf"      value="${build.res}/META-INF"/>
+
+  <patternset id="external.jars.notices">
+    <include name="LICENSE"/>
+    <include name="NOTICE"/>
+    <include name="README.md"/>
+  </patternset>
+
+  <!-- Jars for binary release -->
+  <patternset id="external.jars">
+    <include name="${lib.dir}/${accessors-smart.jar}"/>
+    <include name="${lib.dir}/${apache-bsf.jar}"/>
+    <include name="${lib.dir}/${asm.jar}"/>
+    <include name="${lib.dir}/${beanshell.jar}"/>
+    <include name="${lib.dir}/${dec.jar}"/>
+    <include name="${lib.dir}/${caffeine.jar}"/>
+    <include name="${lib.dir}/${commons-codec.jar}"/>
+    <include name="${lib.dir}/${commons-collections.jar}"/>
+    <include name="${lib.dir}/${commons-dbcp2.jar}"/>
+    <include name="${lib.dir}/${commons-io.jar}"/>
+    <include name="${lib.dir}/${commons-jexl2.jar}"/>
+    <include name="${lib.dir}/${commons-jexl3.jar}"/>
+    <include name="${lib.dir}/${commons-lang3.jar}"/>
+    <include name="${lib.dir}/${commons-math3.jar}"/>
+    <include name="${lib.dir}/${commons-net.jar}"/>
+    <include name="${lib.dir}/${commons-pool2.jar}"/>
+    <include name="${lib.dir}/${commons-text.jar}"/>
+    <include name="${lib.dir}/${darcula.jar}"/>
+    <include name="${lib.dir}/${dnsjava.jar}"/>
+    <include name="${lib.dir}/${freemarker.jar}"/>
+    <include name="${lib.dir}/${groovy-all.jar}"/>
+    <include name="${lib.dir}/${hamcrest-core.jar}"/>
+    <include name="${lib.dir}/${hamcrest-date.jar}"/>
+    <include name="${lib.dir}/${httpclient.jar}"/>
+    <include name="${lib.dir}/${httpasyncclient.jar}"/>
+    <include name="${lib.dir}/${httpcore.jar}"/>
+    <include name="${lib.dir}/${httpcore-nio.jar}"/>
+    <include name="${lib.dir}/${httpmime.jar}"/>
+    <include name="${lib.dir}/${jakarta-oro.jar}"/>
+
+    <include name="${lib.dir}/${javamail.jar}"/>
+    <include name="${lib.dir}/${jcharts.jar}"/>
+    <include name="${lib.dir}/${jcl-over-slf4j.jar}"/>
+    <include name="${lib.dir}/${jms.jar}"/>
+    <include name="${lib.dir}/${rhino.jar}"/>
+    <include name="${lib.dir}/${javax.activation.jar}"/>
+    <include name="${lib.dir}/${javax.activation-api.jar}"/>
+    <include name="${lib.dir}/${jodd-core.jar}"/>
+    <include name="${lib.dir}/${jodd-lagarto.jar}"/>
+    <include name="${lib.dir}/${jodd-log.jar}"/>
+    <include name="${lib.dir}/${jodd-props.jar}"/>
+    <include name="${lib.dir}/${json-path.jar}"/>
+    <include name="${lib.dir}/${json-smart.jar}"/>
+    <include name="${lib.dir}/${jsoup.jar}"/>
+    <include name="${lib.dir}/${junit.jar}"/>
+    <include name="${lib.dir}/${log4j-1.2-api.jar}"/>
+    <include name="${lib.dir}/${log4j-core.jar}"/>
+    <include name="${lib.dir}/${log4j-slf4j-impl.jar}"/>
+    <include name="${lib.dir}/${mongo-java-driver.jar}"/>
+    <include name="${lib.dir}/${ph-css.jar}"/>
+    <include name="${lib.dir}/${ph-commons.jar}"/>
+    <include name="${lib.dir}/${rsyntaxtextarea.jar}"/>
+    <include name="${lib.dir}/${serializer.jar}"/>
+    <include name="${lib.dir}/${slf4j-api.jar}"/>
+    <include name="${lib.dir}/${slf4j-ext.jar}"/>
+    <include name="${lib.dir}/${log4j-api.jar}"/>
+    <include name="${lib.dir}/${jtidy.jar}"/>
+    <include name="${lib.dir}/${tika-core.jar}"/>
+    <include name="${lib.dir}/${tika-parsers.jar}"/>
+    <include name="${lib.dir}/${xalan.jar}"/>
+    <include name="${lib.dir}/${Saxon-HE.jar}"/>
+    <include name="${lib.dir}/${xerces.jar}"/>
+    <include name="${lib.dir}/${xml-apis.jar}"/>
+    <include name="${lib.dir}/${xmlgraphics-commons.jar}"/>
+    <include name="${lib.dir}/${xmlpull.jar}"/>
+    <include name="${lib.dir}/${xpp3.jar}"/>
+    <include name="${lib.dir}/${xstream.jar}"/>
+  </patternset>
+
+  <!--
+>>>>>>> upstream/trunk
   Optional jars, not included in distribution.
   Any such jars need to be downloaded separately.
   These can be put into ${lib.dir} or ${lib.opt}
@@ -479,6 +597,7 @@
   for testing JMeter without the optional Jar file(s).
   -->
 
+<<<<<<< HEAD
 	<!-- Build classpath (includes the optional jar directory) -->
 	<path id="classpath">
 		<!-- Externally produced jars -->
@@ -511,6 +630,9 @@
 		<pathelement location="${lib.dir}/${httpcore-nio.jar}"/>
 		<pathelement location="${lib.dir}/${httpmime.jar}"/>
 		<pathelement location="${lib.dir}/${jakarta-oro.jar}"/>
+    	<pathelement location="${lib.dir}/${jackson-annotations.jar}"/>
+    	<pathelement location="${lib.dir}/${jackson-core.jar}"/>
+    	<pathelement location="${lib.dir}/${jackson-databind.jar}"/>
 		<pathelement location="${lib.dir}/${javamail.jar}"/>
 		<pathelement location="${lib.dir}/${jcharts.jar}"/>
 		<pathelement location="${lib.dir}/${jms.jar}"/>
@@ -589,6 +711,119 @@
 	<target name="init-version">
 		<tstamp/>
 		<!--
+=======
+  <!-- Build classpath (includes the optional jar directory) -->
+  <path id="classpath">
+    <!-- Externally produced jars -->
+    <pathelement location="${lib.dir}/${accessors-smart.jar}"/>
+    <pathelement location="${lib.dir}/${apache-bsf.jar}"/>
+    <pathelement location="${lib.dir}/${asm.jar}"/>
+    <pathelement location="${lib.dir}/${beanshell.jar}"/>
+    <pathelement location="${lib.dir}/${dec.jar}"/>
+    <pathelement location="${lib.dir}/${caffeine.jar}"/>
+    <pathelement location="${lib.dir}/${commons-codec.jar}"/>
+    <pathelement location="${lib.dir}/${commons-collections.jar}"/>
+    <pathelement location="${lib.dir}/${commons-dbcp2.jar}"/>
+    <pathelement location="${lib.dir}/${commons-io.jar}"/>
+    <pathelement location="${lib.dir}/${commons-jexl2.jar}"/>
+    <pathelement location="${lib.dir}/${commons-jexl3.jar}"/>
+    <pathelement location="${lib.dir}/${commons-lang3.jar}"/>
+    <pathelement location="${lib.dir}/${commons-math3.jar}"/>
+    <pathelement location="${lib.dir}/${commons-net.jar}"/>
+    <pathelement location="${lib.dir}/${commons-pool2.jar}"/>
+    <pathelement location="${lib.dir}/${commons-text.jar}"/>
+    <pathelement location="${lib.dir}/${darcula.jar}"/>
+    <pathelement location="${lib.dir}/${dnsjava.jar}"/>
+    <pathelement location="${lib.dir}/${freemarker.jar}"/>
+    <pathelement location="${lib.dir}/${groovy-all.jar}"/>
+    <pathelement location="${lib.dir}/${hamcrest-core.jar}"/>
+    <pathelement location="${lib.dir}/${hamcrest-date.jar}"/>
+    <pathelement location="${lib.dir}/${httpclient.jar}"/>
+    <pathelement location="${lib.dir}/${httpasyncclient.jar}"/>
+    <pathelement location="${lib.dir}/${httpcore.jar}"/>
+    <pathelement location="${lib.dir}/${httpcore-nio.jar}"/>
+    <pathelement location="${lib.dir}/${httpmime.jar}"/>
+    <pathelement location="${lib.dir}/${jakarta-oro.jar}"/>
+
+    <pathelement location="${lib.dir}/${javamail.jar}"/>
+    <pathelement location="${lib.dir}/${jcharts.jar}"/>
+    <pathelement location="${lib.dir}/${jms.jar}"/>
+    <pathelement location="${lib.dir}/${rhino.jar}"/>
+    <pathelement location="${lib.dir}/${javax.activation.jar}"/>
+    <pathelement location="${lib.dir}/${javax.activation-api.jar}"/>
+    <pathelement location="${lib.dir}/${jodd-core.jar}"/>
+    <pathelement location="${lib.dir}/${jodd-lagarto.jar}"/>
+    <pathelement location="${lib.dir}/${jodd-log.jar}"/>
+    <pathelement location="${lib.dir}/${jodd-props.jar}"/>
+    <pathelement location="${lib.dir}/${json-path.jar}"/>
+    <pathelement location="${lib.dir}/${json-smart.jar}"/>
+    <pathelement location="${lib.dir}/${jsoup.jar}"/>
+    <pathelement location="${lib.dir}/${junit.jar}"/>
+    <pathelement location="${lib.dir}/${log4j-1.2-api.jar}"/>
+    <pathelement location="${lib.dir}/${log4j-core.jar}"/>
+    <pathelement location="${lib.dir}/${log4j-slf4j-impl.jar}"/>
+    <pathelement location="${lib.dir}/${mongo-java-driver.jar}"/>
+    <pathelement location="${lib.dir}/${ph-css.jar}"/>
+    <pathelement location="${lib.dir}/${ph-commons.jar}"/>
+    <pathelement location="${lib.dir}/${rsyntaxtextarea.jar}"/>
+    <pathelement location="${lib.dir}/${serializer.jar}"/>
+    <pathelement location="${lib.dir}/${slf4j-api.jar}"/>
+    <pathelement location="${lib.dir}/${slf4j-ext.jar}"/>
+    <pathelement location="${lib.dir}/${spock-core.jar}"/>
+    <pathelement location="${lib.dir}/${cglib-nodep.jar}"/>
+    <pathelement location="${lib.dir}/${objenesis.jar}"/>
+    <pathelement location="${lib.dir}/${jtidy.jar}"/>
+    <pathelement location="${lib.dir}/${tika-core.jar}"/>
+    <pathelement location="${lib.dir}/${tika-parsers.jar}"/>
+    <pathelement location="${lib.dir}/${xalan.jar}"/>
+    <pathelement location="${lib.dir}/${Saxon-HE.jar}"/>
+    <pathelement location="${lib.dir}/${xerces.jar}"/>
+    <pathelement location="${lib.dir}/${xml-apis.jar}"/>
+    <pathelement location="${lib.dir}/${xmlgraphics-commons.jar}"/>
+    <pathelement location="${lib.dir}/${xmlpull.jar}"/>
+    <pathelement location="${lib.dir}/${xpp3.jar}"/>
+    <pathelement location="${lib.dir}/${xstream.jar}"/>
+    <!-- Generated jars -->
+    <fileset dir="${lib.dir}" includes="jorphan.jar"/>
+    <!-- bshclient is needed to prevent occasional test failures in TestClassFinder -->
+    <fileset dir="${lib.dir}" includes="bshclient.jar"/>
+    <!-- API-only jars-->
+    <fileset dir="${lib.api}" includes="*.jar"/>
+    <!-- Optional jars -->
+    <fileset dir="${lib.opt}" includes="*.jar"/>
+  </path>
+
+  <!-- Logging classpath -->
+  <path id="logging.classpath">
+    <pathelement location="${lib.dir}/${jcl-over-slf4j.jar}"/>
+    <pathelement location="${lib.dir}/${log4j-api.jar}"/>
+    <pathelement location="${lib.dir}/${log4j-core.jar}"/>
+    <pathelement location="${lib.dir}/${log4j-1.2-api.jar}"/>
+    <pathelement location="${lib.dir}/${log4j-slf4j-impl.jar}"/>
+  </path>
+
+  <!-- Anakia classpath -->
+  <path id="anakia.classpath">
+    <pathelement location="${lib.doc}/${velocity.jar}"/>
+    <pathelement location="${lib.doc}/${jdom.jar}"/>
+    <pathelement location="${lib.dir}/${commons-collections.jar}"/>
+    <pathelement location="${lib.doc}/${commons-lang.jar}"/>
+  </path>
+
+  <!-- Version info filter set -->
+  <tstamp>
+    <format property="year" pattern="yyyy" locale="en"/>
+  </tstamp>
+
+  <filterset id="year.filters">
+    <filter token="YEAR" value="${year}"/>
+  </filterset>
+
+
+  <target name="init-version">
+    <tstamp/>
+    <!--
+>>>>>>> upstream/trunk
       JMeter version
       This is overridden for formal releases.
     -->
@@ -3409,6 +3644,7 @@ run JMeter unless all the JMeter jars are added.
     and calls all the possible targets. The targets use "if" and "unless" to provide
     conditional execution (it would be a lot easier if antcall supported if/unless).
   -->
+
 	<target name="_process_all_jars">
 		<process_jarfile jarname="accessors-smart"/>
 		<process_jarfile jarname="apache-bsf"/>
@@ -3442,6 +3678,9 @@ run JMeter unless all the JMeter jars are added.
 		<process_jarfile jarname="httpcore-nio"/>
 		<process_jarfile jarname="httpmime"/>
 		<process_jarfile jarname="jakarta-oro"/>
+    	<process_jarfile jarname="jackson-annotations"/>
+    	<process_jarfile jarname="jackson-core"/>
+    	<process_jarfile jarname="jackson-databind"/>
 		<process_jarfile jarname="javamail"/>
 		<process_jarfile jarname="jcharts"/>
 		<process_jarfile jarname="jdom" dest.dir="${lib.doc}"/>
@@ -3582,10 +3821,11 @@ run JMeter unless all the JMeter jars are added.
 			<classpath path="${lib.coverage}/${jacocoant.jar}"/>
 		</taskdef>
 		<jacoco:agent property="jacocoagent"
-                   destfile="reports/jacoco.exec"
-                   includes="org.apache.jmeter.*:org.apache.jorphan.*:org.apache.commons.cli.avalon.*:org.sl4j.impl.StaticLoggerBinder:org.apache.http.impl.conn.*"
+			upstream/trunk
+            destfile="reports/jacoco.exec"
+            includes="org.apache.jmeter.*:org.apache.jorphan.*:org.apache.commons.cli.avalon.*:org.sl4j.impl.StaticLoggerBinder:org.apache.http.impl.conn.*"
                    sessionid=""
-     />
+     	/>
 	</target>
 
 	<target name="_coverage.report" depends="_coverage.prepare, init-version">

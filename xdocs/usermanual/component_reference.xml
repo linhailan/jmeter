@@ -150,12 +150,12 @@ Latency is set to the time it takes to login.
          When a connection is released by JMeter, it may or may not be re-used by the same thread.</li>
          <li>The API is best suited to single-threaded usage - various settings
          are defined via system properties, and therefore apply to all connections.</li>
-         <li>There is a bug in the handling of HTTPS via a Proxy (the <code>CONNECT</code> is not handled correctly).
-         See Java bugs 6226610 and 6208335.
-         </li>
+         <li>No support of Kerberos authentication</li>
+         <li>It does not support client based certificate testing with Keystore Config.</li>
+         <li>Better control of Retry mechanism</li>
          <li>It does not support virtual hosts.</li>
          <li>It supports only the following methods: <code>GET</code>, <code>POST</code>, <code>HEAD</code>, <code>OPTIONS</code>, <code>PUT</code>, <code>DELETE</code> and <code>TRACE</code></li>
-         <li>It does not support client based certificate testing with Keystore Config.</li>
+         <li>Better control on DNS Caching with <complink name="DNS Cache Manager"/></li>
          </ul>
          <note>Note: the <code>FILE</code> protocol is intended for testing purposes only.
          It is handled by the same code regardless of which HTTP Sampler is used.</note>
@@ -917,10 +917,7 @@ This will not have any impact on existing Test plans.
 <center><h2>(Beta Code)</h2></center>
 <description><p>AccessLogSampler was designed to read access logs and generate http requests.
 For those not familiar with the access log, it is the log the webserver maintains of every
-request it accepted. This means every image, CSS file, JavaScript file, html file, &hellip;
-The current implementation is complete, but some features have not been enabled. 
-There is a filter for the access log parser, but I haven't figured out how to link to the pre-processor. 
-Once I do, changes to the sampler will be made to enable that functionality.</p>
+request it accepted. This means every image, CSS file, JavaScript file, html file, &hellip;</p>
 <p>Tomcat uses the common format for access logs. This means any webserver that uses the
 common log format can use the AccessLogSampler. Server that use common log format include:
 Tomcat, Resin, Weblogic, and SunOne. Common log format looks

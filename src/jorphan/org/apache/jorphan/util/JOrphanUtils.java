@@ -20,6 +20,7 @@ package org.apache.jorphan.util;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
@@ -587,6 +589,8 @@ public final class JOrphanUtils {
     }
 
     /**
+     * Check whether we can write to a folder. 
+     * A folder can be written to if if does not contain any file or folder
      * Throw {@link IllegalArgumentException} if folder cannot be written to either:
      * <ul>
      *  <li>Because it exists but is not a folder</li>
@@ -594,18 +598,48 @@ public final class JOrphanUtils {
      *  <li>Because it does not exist but cannot be created</li>
      * </ul>
      * @param folder {@link File} 
-     * 
      * @throws IllegalArgumentException when folder can't be written to
      */
     public static void canSafelyWriteToFolder(File folder) {
-        canSafelyWriteToFolder(folder, false);
+        canSafelyWriteToFolder(folder, false, file -> true);
     }
+    
+    
+    /**
+     * Check whether we can write to a folder. 
+     * A folder can be written to if folder.listFiles(exporterFileFilter) does not return any file or folder.
+     * Throw {@link IllegalArgumentException} if folder cannot be written to either:
+     * <ul>
+     *  <li>Because it exists but is not a folder</li>
+     *  <li>Because it exists but is not empty using folder.listFiles(exporterFileFilter)</li>
+     *  <li>Because it does not exist but cannot be created</li>
+     * </ul>
+     * @param folder {@link File} 
+     * @param exporterFileFilter {@link FileFilter} used to 
+     * @throws IllegalArgumentException when folder can't be written to
+     */
+    public static void canSafelyWriteToFolder(File folder, FileFilter fileFilter) {
+        canSafelyWriteToFolder(folder, false, fileFilter);
+    }
+    
+    /**
+     * Check whether we can write to a folder.
+     * @param folder {@link File} 
+     * @param deleteFolderContent if true flag whether the folder should be emptied or a file with the same name deleted
+     * @throws IllegalArgumentException when folder can't be written to
+     * Throw {@link IllegalArgumentException} if folder cannot be written
+     */
+    public static void canSafelyWriteToFolder(File folder, boolean deleteFolderContent) {
+        canSafelyWriteToFolder(folder, deleteFolderContent, file -> true);
+    }
+
+    
     /**
      * Check whether we can write to a folder.
      *
      * @param folder which should be checked for writability and emptyness
      * @param deleteFolderIfExists flag whether the folder should be emptied or a file with the same name deleted
-     *
+     * @param exporterFileFilter {@link FileFilter}
      * @throws IllegalArgumentException when folder can't be written to. That could have the following reasons:
      * <ul>
      *  <li>it exists but is not a folder</li>
@@ -613,7 +647,7 @@ public final class JOrphanUtils {
      *  <li>it does not exist but cannot be created</li>
      * </ul>
      */
-    public static void canSafelyWriteToFolder(File folder, boolean deleteFolderIfExists) {
+    public static void canSafelyWriteToFolder(File folder, boolean deleteFolderIfExists, FileFilter exporterFileFilter) {
         if(folder.exists()) {
             if (folder.isFile()) {
                 if(deleteFolderIfExists) {
@@ -626,7 +660,7 @@ public final class JOrphanUtils {
                         +folder.getAbsolutePath()+"' as it is an existing file");
                 }
             } else {
-                File[] listedFiles = folder.listFiles();
+                File[] listedFiles = folder.listFiles(exporterFileFilter);
                 if(listedFiles != null && listedFiles.length > 0) {
                     if(deleteFolderIfExists) {
                         try {
@@ -679,5 +713,18 @@ public final class JOrphanUtils {
                 result.toString(),
                 totalReplaced
         };
+    }
+
+    public static int replaceValue(String regex, String replaceBy, boolean caseSensitive, String value, Consumer<String> setter) {
+        if (StringUtils.isBlank(value)) {
+            return 0;
+        }
+        Object[] result = replaceAllWithRegex(value, regex, replaceBy, caseSensitive);
+        int nbReplaced = ((Integer) result[1]).intValue();
+        if (nbReplaced <= 0) {
+            return 0;
+        }
+        setter.accept((String) result[0]);
+        return nbReplaced;
     }
 }

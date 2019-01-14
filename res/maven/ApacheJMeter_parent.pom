@@ -82,6 +82,9 @@ under the License.
       <httpcore.version>4.4.10</httpcore.version>
       <httpcore-nio.version>4.4.10</httpcore-nio.version>
       <httpmime.version>4.5.6</httpmime.version>
+      <jackson-annotations.version>2.9.8</jackson-annotations.version>
+      <jackson-core.version>2.9.8</jackson-core.version>
+      <jackson-databind.version>2.9.8</jackson-databind.version>
       <jakarta-oro.version>2.0.8</jakarta-oro.version>
       <javax.activation-api.version>1.2.0</javax.activation-api.version>
       <javax.activation.version>1.2.0</javax.activation.version>
@@ -99,7 +102,7 @@ under the License.
       <mongo-java-driver.version>2.11.3</mongo-java-driver.version>
       <ph-css.version>6.1.1</ph-css.version>
       <ph-commons.version>9.2.0</ph-commons.version>
-      <rsyntaxtextarea.version>3.0.0</rsyntaxtextarea.version>
+      <rsyntaxtextarea.version>3.0.2</rsyntaxtextarea.version>
       <Saxon-HE.version>9.8.0-14</Saxon-HE.version>
       <slf4j-api.version>1.7.25</slf4j-api.version>
       <slf4j-ext.version>1.7.25</slf4j-ext.version>
@@ -265,6 +268,21 @@ under the License.
         <groupId>oro</groupId>
         <artifactId>oro</artifactId>
         <version>${jakarta-oro.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson-databind.version}</version>
+      </dependency>
+        <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson-annotations.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson-core.version}</version>
       </dependency>
       <dependency>
         <groupId>jcharts</groupId>
