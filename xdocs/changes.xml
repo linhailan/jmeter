@@ -68,11 +68,22 @@ Summary
 <!-- =================== Incompatible changes =================== -->
 
 <ch_section>Incompatible changes</ch_section>
-
+<ul>
 <li>In <code>Response Time Percentiles Over Time (successful responses)</code> graph of the HTML report, before this version, percentile computation of each time slot used the percentile data
 of previous time slot as a base. Starting with this version, each time slot is independant. See <bugzilla>62883</bugzilla></li>
 <li><code>ClientJMeterEngine#rsetProperties</code> signature has been changed to use <code>HashMap&lt;String,String&gt;</code> instead of Properties, see <bugzilla>63034</bugzilla></li>
-
+<li>A new Menu item <code>Tools</code> has been introduced, the following menu items that were in <code>Help</code> menu are now under this new menu item:
+<ul>
+    <li><code>Create Heap Dump</code></li>
+    <li><code>Create Thread Dump</code></li>
+    <li><code>Compile JSR223 Elements</code></li>
+    <li><code>Export Transactions for Report</code></li>
+    <li><code>Import from cURL</code></li>
+    <li><code>Function Helper Dialog</code></li>
+</ul>
+See <bugzilla>63094</bugzilla>
+</li>
+</ul>
 <!-- =================== Improvements =================== -->
 
 <ch_section>Improvements</ch_section>
@@ -100,7 +111,7 @@ of previous time slot as a base. Starting with this version, each time slot is i
 
 <h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
 <ul>
-    <li><bug>62766</bug>Keystore Config : We should load all aliases by default. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+    <li><bug>62766</bug>Keystore Config: We should load all aliases by default. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
     <li><bug>62832</bug>JDBC Connection Configuration: Be able to set init SQL statements. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
 </ul>
 
@@ -115,7 +126,7 @@ of previous time slot as a base. Starting with this version, each time slot is i
 
 <h3>Report / Dashboard</h3>
 <ul>
-    <li><bug>62883</bug>Report / Dashboard : Change the way percentiles are computed for Response Time Percentiles Over Time (successful responses) graph</li>
+    <li><bug>62883</bug>Report / Dashboard: Change the way percentiles are computed for Response Time Percentiles Over Time (successful responses) graph</li>
     <li><bug>63060</bug>Report Generator: A generator should only check for folder/files it generates and only delete those ones</li>
     <li><bug>63059</bug>Create a new JsonExporter that exports as JSON the content of data computed for HTML Dashboard Statistics table. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
     <li><bug>63081</bug>Command line Option <code>-f</code> does not delete report folder when using generation only through command line option <code>-g</code>. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
@@ -131,10 +142,12 @@ of previous time slot as a base. Starting with this version, each time slot is i
     <li><pr>411</pr>Use <code>SHA-1</code> instead of <code>SHA1</code> in <code>org.apache.jmeter.save.SaveService</code>. Contributed by Paco (paco.xu at daocloud.io)</li>
     <li><bug>62914</bug>Add a hint in Thread Group UI about duration of test</li>
     <li><bug>62925</bug>Add support for ThreadDump to the JMeter non-GUI</li>
-    <li><bug>62870</bug>Templates : Add ability to provide parameters. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+    <li><bug>62870</bug>Templates: Add ability to provide parameters. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
     <li><bug>62829</bug>Allow specifying Proxy server scheme for HTTP request sampler, Advanced tab and command line option. Contributed by Hitesh Patel (hitesh.h.patel at gmail.com)</li>
     <li><bug>59633</bug>Menus <code>Save Test Plan as</code>, <code>Save as Test Fragment</code> and <code>Save Selection as ...</code> should use a new file name in File Dialog</li>
     <li><bug>61486</bug>Make jmeter-server and non GUI mode run headless</li>
+    <li><bug>63093</bug>Add <code>Compile JSR223 Test Elements</code> menu item. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+    <li><bug>63094</bug>Introduce a new Tools menu</li>
 </ul>
 
 <ch_section>Non-functional changes</ch_section>
@@ -159,7 +172,7 @@ of previous time slot as a base. Starting with this version, each time slot is i
     <li>Updated to xstream 1.4.11 (from 1.4.10)</li>
     <li>Updated to jodd 5.0.6 (from 4.1.4)</li>
     <li>Updated to asm-7.0 (from 6.1)</li>
-    <li>Update to ActiveMQ 5.15.7 (from 5.5.16)</li>
+    <li>Update to ActiveMQ 5.15.8 (from 5.5.16)</li>
     <li>Updated to rsyntaxtextarea-3.0.2 (from 2.6.1)</li>
     <li><bug>62818</bug>Updated to xercesImpl to 2.12.0 (from 2.11.0). Reported by Stefan Seide (stefan at trilobyte-se.de)</li>
     <li><bug>62744</bug>Upgrade jquery to version 3.3.1, jquery-ui to 1.12.1, bootstrap to 3.3.7</li>
@@ -180,15 +193,15 @@ of previous time slot as a base. Starting with this version, each time slot is i
     <li><bug>62940</bug>Use different <code>cn</code> and type of SAN extension when we are generating certificates based on IP addresses.</li>
     <li><bug>62916</bug>HTTP Test Script Recorder fails with UnsupportedOperationException if recording is started after a distributed test has been run</li>
     <li><bug>62987</bug>A TestBean element under HTTP(S) Test Script recorder does not work. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
-    <li><bug>62987</bug>Abnormal NoHttpResponseException when running request through proxy HTTP(S) Test Script Recorder after a first failing request. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+    <li><bug>63015</bug>Abnormal NoHttpResponseException when running request through proxy HTTP(S) Test Script Recorder after a first failing request. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
     <li><bug>62852</bug>HTTP Request Header missing information when using a proxy</li>
-    <li><bug>63048</bug> - JMeter does not retrieve link resources of type "shortcut icon" or "icon". Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+    <li><bug>63048</bug>JMeter does not retrieve link resources of type "shortcut icon" or "icon". Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
 </ul>
 
 <h3>Other Samplers</h3>
 <ul>
     <li><bug>62775</bug>If many jars are in a folder referenced by <code>user.classpath</code>, startup can be extremely slow due to JUnit</li>
-    <li><bug>63031</bug>Incorrect JDBC driver class : <code>org.firebirdsql.jdbc.FBDrivery</code>. Contributed by Sonali (arora.sonali99 at gmail.com)</li>
+    <li><bug>63031</bug>Incorrect JDBC driver class: <code>org.firebirdsql.jdbc.FBDrivery</code>. Contributed by Sonali (arora.sonali99 at gmail.com)</li>
 </ul>
 
 <h3>Controllers</h3>
@@ -206,7 +219,7 @@ of previous time slot as a base. Starting with this version, each time slot is i
 
 <h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
 <ul>
-    <li><bug>62774</bug>XPath2Extractor : Scope variable is broken. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+    <li><bug>62774</bug>XPath2Extractor: Scope variable is broken. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
     <li><bug>62860</bug>JSON Extractor: Avoid NPE and noisy error message "<code>Error processing JSON content in</code>" when variable is not found</li>
 </ul>
 
@@ -220,11 +233,11 @@ of previous time slot as a base. Starting with this version, each time slot is i
 
 <h3>Report / Dashboard</h3>
 <ul>
-    <li><bug>62777</bug>Web Report / Dashboard : Hide All in <code>Response Time Percentiles Over Time (successful responses)</code> fails.</li>
-    <li><bug>62780</bug>Web Report / Dashboard : Display All in <code>Response Time Vs Request</code> fails.</li>
-    <li><bug>62781</bug>Web Report / Dashboard : Display All in <code>Response Time Overview</code> fails.</li>
-    <li><bug>62782</bug>Web Report / Dashboard : Remove duplicate/unused dependencies</li>
-    <li><bug>62894</bug>Report / Dashboard : Throughput is in wrong column which is confusing as unit is millisecond</li>
+    <li><bug>62777</bug>Web Report / Dashboard: Hide All in <code>Response Time Percentiles Over Time (successful responses)</code> fails.</li>
+    <li><bug>62780</bug>Web Report / Dashboard: Display All in <code>Response Time Vs Request</code> fails.</li>
+    <li><bug>62781</bug>Web Report / Dashboard: Display All in <code>Response Time Overview</code> fails.</li>
+    <li><bug>62782</bug>Web Report / Dashboard: Remove duplicate/unused dependencies</li>
+    <li><bug>62894</bug>Report / Dashboard: Throughput is in wrong column which is confusing as unit is millisecond</li>
     <li><bug>63016</bug>Empty HTML report if source csv contains labels with quotes. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
 </ul>
 
