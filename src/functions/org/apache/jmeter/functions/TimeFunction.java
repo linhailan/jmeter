@@ -19,6 +19,7 @@
 package org.apache.jmeter.functions;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,103 +38,120 @@ import org.apache.jmeter.util.JMeterUtils;
 
 /**
  * __time() function - returns the current time in milliseconds
+ * 
  * @since 2.2
  */
 public class TimeFunction extends AbstractFunction {
 
-    private static final String KEY = "__time"; // $NON-NLS-1$
-    
-    private static final Pattern DIVISOR_PATTERN = Pattern.compile("/\\d+");
+	private static final String KEY = "__time"; // $NON-NLS-1$
 
-    private static final List<String> desc = new LinkedList<>();
+	private static final Pattern DIVISOR_PATTERN = Pattern.compile("/\\d+");
 
-    // Only modified in class init
-    private static final Map<String, String> aliases = new HashMap<>();
+	private static final List<String> desc = new LinkedList<>();
 
-    static {
-        desc.add(JMeterUtils.getResString("time_format")); //$NON-NLS-1$
-        desc.add(JMeterUtils.getResString("function_name_paropt")); //$NON-NLS-1$
-        aliases.put("YMD", //$NON-NLS-1$
-                JMeterUtils.getPropDefault("time.YMD", //$NON-NLS-1$
-                        "yyyyMMdd")); //$NON-NLS-1$
-        aliases.put("HMS", //$NON-NLS-1$
-                JMeterUtils.getPropDefault("time.HMS", //$NON-NLS-1$
-                        "HHmmss")); //$NON-NLS-1$
-        aliases.put("YMDHMS", //$NON-NLS-1$
-                JMeterUtils.getPropDefault("time.YMDHMS", //$NON-NLS-1$
-                        "yyyyMMdd-HHmmss")); //$NON-NLS-1$
-        aliases.put("USER1", //$NON-NLS-1$
-                JMeterUtils.getPropDefault("time.USER1","")); //$NON-NLS-1$
-        aliases.put("USER2", //$NON-NLS-1$
-                JMeterUtils.getPropDefault("time.USER2","")); //$NON-NLS-1$
-    }
+	// Only modified in class init
+	private static final Map<String, String> aliases = new HashMap<>();
 
-    // Ensure that these are set, even if no paramters are provided
-    private String format   = ""; //$NON-NLS-1$
-    private String variable = ""; //$NON-NLS-1$
+	static {
+		desc.add(JMeterUtils.getResString("time_format")); //$NON-NLS-1$
+		desc.add(JMeterUtils.getResString("function_name_paropt")); //$NON-NLS-1$
+		aliases.put("YMD", //$NON-NLS-1$
+				JMeterUtils.getPropDefault("time.YMD", //$NON-NLS-1$
+						"yyyyMMdd")); //$NON-NLS-1$
+		aliases.put("HMS", //$NON-NLS-1$
+				JMeterUtils.getPropDefault("time.HMS", //$NON-NLS-1$
+						"HHmmss")); //$NON-NLS-1$
+		aliases.put("YMDHMS", //$NON-NLS-1$
+				JMeterUtils.getPropDefault("time.YMDHMS", //$NON-NLS-1$
+						"yyyyMMdd-HHmmss")); //$NON-NLS-1$
+		aliases.put("USER1", //$NON-NLS-1$
+				JMeterUtils.getPropDefault("time.USER1", "")); //$NON-NLS-1$
+		aliases.put("USER2", //$NON-NLS-1$
+				JMeterUtils.getPropDefault("time.USER2", "")); //$NON-NLS-1$
+		aliases.put("WEEKNO", JMeterUtils.getPropDefault("time.WEEKNO", "1"));
+	}
 
-    public TimeFunction(){
-        super();
-    }
+	// Ensure that these are set, even if no paramters are provided
+	private String format = ""; //$NON-NLS-1$
+	private String variable = ""; //$NON-NLS-1$
 
-    /** {@inheritDoc} */
-    @Override
-    public String execute(SampleResult previousResult, Sampler currentSampler) throws InvalidVariableException {
-        String datetime;
-        if (format.length() == 0){// Default to milliseconds
-            datetime = Long.toString(System.currentTimeMillis());
-        } else {
-            // Resolve any aliases
-            String fmt = aliases.get(format);
-            if (fmt == null) {
-                fmt = format;// Not found
-            }
-            if (DIVISOR_PATTERN.matcher(fmt).matches()) { // divisor is a positive number
-                long div = Long.parseLong(fmt.substring(1)); // should never case NFE
-                datetime = Long.toString(System.currentTimeMillis() / div);
-            } else {
-                SimpleDateFormat df = new SimpleDateFormat(fmt);// Not synchronised, so can't be shared
-                datetime = df.format(new Date());
-            }
-        }
+	public TimeFunction() {
+		super();
+	}
 
-        if (variable.length() > 0) {
-            JMeterVariables vars = getVariables();
-            if (vars != null){// vars will be null on TestPlan
-                vars.put(variable, datetime);
-            }
-        }
-        return datetime;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String execute(SampleResult previousResult, Sampler currentSampler) throws InvalidVariableException {
+		String datetime;
 
-    /** {@inheritDoc} */
-    @Override
-    public void setParameters(Collection<CompoundVariable> parameters) throws InvalidVariableException {
+		System.out.println("format: " + format);
+		if ("WEEKNO".equals(format)) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar.setTime(new Date());
+			int weekno = calendar.get(Calendar.WEEK_OF_YEAR);
+			datetime = Integer.toString(weekno);
+		} else {
+			if (format.length() == 0) {// Default to milliseconds
+				datetime = Long.toString(System.currentTimeMillis());
+			} else {
+				// Resolve any aliases
+				String fmt = aliases.get(format);
+				if (fmt == null) {
+					fmt = format;// Not found
+				}
+				if (DIVISOR_PATTERN.matcher(fmt).matches()) { // divisor is a positive number
+					long div = Long.parseLong(fmt.substring(1)); // should never case NFE
+					datetime = Long.toString(System.currentTimeMillis() / div);
+				} else {
+					SimpleDateFormat df = new SimpleDateFormat(fmt);// Not synchronised, so can't be shared
+					datetime = df.format(new Date());
+					if ("MM".equals(format)) {
+						if (datetime.indexOf('0') != -1) {
+							datetime = datetime.substring(1);
+						}
+					}
+				}
+			}
+		}
 
-        checkParameterCount(parameters, 0, 2);
+		if (variable.length() > 0) {
+			JMeterVariables vars = getVariables();
+			if (vars != null) {// vars will be null on TestPlan
+				vars.put(variable, datetime);
+			}
+		}
+		return datetime;
+	}
 
-        Object []values = parameters.toArray();
-        int count = values.length;
+	/** {@inheritDoc} */
+	@Override
+	public void setParameters(Collection<CompoundVariable> parameters) throws InvalidVariableException {
 
-        if (count > 0) {
-            format = ((CompoundVariable) values[0]).execute();
-        }
+		checkParameterCount(parameters, 0, 2);
 
-        if (count > 1) {
-            variable = ((CompoundVariable)values[1]).execute().trim();
-        }
+		Object[] values = parameters.toArray();
+		int count = values.length;
 
-    }
+		if (count > 0) {
+			format = ((CompoundVariable) values[0]).execute();
+		}
 
-    /** {@inheritDoc} */
-    @Override
-    public String getReferenceKey() {
-        return KEY;
-    }
+		if (count > 1) {
+			variable = ((CompoundVariable) values[1]).execute().trim();
+		}
 
-    /** {@inheritDoc} */
-    @Override
-    public List<String> getArgumentDesc() {
-        return desc;
-    }
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getReferenceKey() {
+		return KEY;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<String> getArgumentDesc() {
+		return desc;
+	}
 }

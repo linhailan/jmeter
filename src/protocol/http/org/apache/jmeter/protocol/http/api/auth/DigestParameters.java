@@ -32,6 +32,7 @@ public class DigestParameters {
     private String algorithm;
     private String opaque;
 
+    
 
     public DigestParameters() {
         super();

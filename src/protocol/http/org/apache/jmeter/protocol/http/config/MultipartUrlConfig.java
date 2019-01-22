@@ -57,6 +57,7 @@ public class MultipartUrlConfig implements Serializable {
      */
     @Deprecated
     public MultipartUrlConfig(){
+
         this(null);
     }
 
