@@ -214,7 +214,7 @@ junit 4.12
 
 HttpComponents
 - HttpComponents Core 4.4.10
-- HttpComponents Client 4.5.6
+- HttpComponents Client 4.5.7
 - HttpComponents AsyncClient 4.1.4
 - HttpComponents Core NIO 4.4.10
 -----------
@@ -247,6 +247,7 @@ slf4j-api-1.7.25
 http://www.slf4j.org/
 - jodd-core
 - json-path
+- jmeter internal logging
 
 tika-1.20
 --------------
