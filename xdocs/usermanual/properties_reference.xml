@@ -732,6 +732,11 @@ JMETER-SERVER</source>
     Set this to a value less than zero to disable the background thread.<br/>
     Defaults to: <code>5000</code>
 </property>
+<property name="subresults.disable_renaming">
+    Since version 5.0 JMeter has a new SubResult Naming Policy which numbers subresults by default<br/>
+    This property if set to <code>true</code> discards renaming policy. This can be required if you're using JMeter for functional testing.<br/>
+    Defaults to: <code>false</code>
+</property>
 </properties>
 </section>
 <section name="&sect-num;.17 Upgrade" anchor="upgrade">
@@ -1908,6 +1913,16 @@ JMETER-SERVER</source>
     Used by JSR-223 elements.<br/>
     Size of compiled scripts cache.<br/>
     Defaults to: <code>100</code></property>
+</properties>
+</section>
+
+<section name="&sect-num;.45 Documentation generation" anchor="docgeneration">
+<description>Advanced properties for documentation generation</description>
+<properties>
+    <property name="docgeneration.schematic_xsl">
+    Path to XSL file used to generate Schematic View of Test Plan.<br/>
+    When empty, JMeter will use the embedded one in src/core/org/apache/jmeter/gui/action/schematic.xsl<br/>
+    No default value</property>
 </properties>
 </section>
 <!-- 
